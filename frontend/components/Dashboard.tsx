@@ -134,7 +134,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden bg-slate-950">
+    <div className="flex flex-col h-full overflow-hidden bg-slate-950">
       {/* ── Header ─────────────────────────────────────────────── */}
       <header className="shrink-0 flex items-center gap-3 px-4 py-2.5 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border-b border-slate-800/60 shadow-xl">
         {/* Logo */}

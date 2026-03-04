@@ -6,12 +6,17 @@
   color-scheme: dark;
 }
 
-/* Scale the entire UI to ~80% so the 3-column layout fits on any laptop screen
-   without the user having to manually zoom out in the browser.
-   Only applies to Chromium/Safari (zoom is ignored by Firefox, which handles
-   the layout fine via the narrower column widths below). */
+/* Scale the entire UI to ~82% so the 3-column layout fits on any laptop screen.
+   zoom: 0.82 shrinks visible content, so 100vh inside the zoomed context equals
+   only 82% of the physical screen. We compensate by setting the html/body height
+   to (100vh / 0.82) ≈ 122vh so the layout fills the full physical screen. */
 html {
   zoom: 0.82;
+  height: calc(100vh / 0.82);
+}
+
+body {
+  height: 100%;
 }
 
 body {
