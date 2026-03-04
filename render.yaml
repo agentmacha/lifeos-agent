@@ -18,6 +18,16 @@ services:
         sync: false
       - key: REKA_API_URL
         value: https://api.reka.ai/v1
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_PHONE_NUMBER
+        sync: false
+      - key: SENDGRID_API_KEY
+        sync: false
+      - key: SENDGRID_FROM_EMAIL
+        value: noreply@lifeos.app
       - key: PYTHON_VERSION
         value: "3.12.0"
 

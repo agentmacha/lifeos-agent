@@ -4,7 +4,7 @@ import random
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
-from fastapi import BackgroundTasks, Depends, FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import BackgroundTasks, Depends, FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel
@@ -43,9 +43,18 @@ app.add_middleware(
 )
 
 # Ensure 500 and other errors still send CORS headers (browser would otherwise hide the response)
-def _cors_headers() -> dict:
+def _cors_headers(request=None) -> dict:
+    import re
+    origin = ""
+    if request is not None:
+        origin = request.headers.get("origin", "")
+    allowed = any([
+        origin in _CORS_ORIGINS,
+        re.match(r"https://.*\.onrender\.com", origin or ""),
+    ])
+    cors_origin = origin if allowed else _CORS_ORIGINS[0]
     return {
-        "Access-Control-Allow-Origin": "https://lifeos-frontend-5wij.onrender.com",
+        "Access-Control-Allow-Origin": cors_origin,
         "Access-Control-Allow-Credentials": "true",
         "Access-Control-Allow-Methods": "*",
         "Access-Control-Allow-Headers": "*",
@@ -59,7 +68,7 @@ async def unhandled_exception_handler(request, exc):
     return JSONResponse(
         status_code=500,
         content={"detail": str(exc), "error": "Internal server error"},
-        headers=_cors_headers(),
+        headers=_cors_headers(request),
     )
 
 
@@ -1317,7 +1326,7 @@ class ChatRequest(BaseModel):
 
 
 @app.post("/chat", tags=["chat"])
-async def chat(req: ChatRequest, db: Session = Depends(get_db)):
+async def chat(req: ChatRequest, request: Request, db: Session = Depends(get_db)):
     if not settings.OPENAI_API_KEY:
         return {
             "reply": (
@@ -1342,7 +1351,7 @@ async def chat(req: ChatRequest, db: Session = Depends(get_db)):
                 "tools_used": [],
                 "actions": [],
             },
-            headers=_cors_headers(),
+            headers=_cors_headers(request),
         )
 
 
