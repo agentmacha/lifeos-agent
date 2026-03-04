@@ -47,14 +47,7 @@ services:
     rootDir: backend
     buildCommand: pip install httpx
     schedule: "0 9,13,22 * * *"
-    command: |
-      python -c "
-      import httpx, os
-      base = os.environ.get('BACKEND_URL', 'https://lifeos-backend.onrender.com').rstrip('/')
-      r = httpx.post(f'{base}/cron/send-reminders', params={'reminder_type': 'auto'}, timeout=60)
-      print(r.status_code, r.json() if r.status_code == 200 else r.text)
-      "
+    command: python -c "import httpx,os; base=os.environ.get('BACKEND_URL','https://lifeos-backend.onrender.com').rstrip('/'); r=httpx.post(f'{base}/cron/send-reminders',params={'reminder_type':'auto'},timeout=60); print(r.status_code)"
     envVars:
       - key: BACKEND_URL
         sync: false
-        # Set to your backend URL, e.g. https://lifeos-backend.onrender.com
