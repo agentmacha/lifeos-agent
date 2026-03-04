@@ -40,14 +40,3 @@ services:
       - key: NODE_VERSION
         value: "20"
 
-  # ── Reminders cron: SMS/email at 9:00, 13:00, 22:00 UTC (morning, lunch, sleep)
-  - type: cron
-    name: lifeos-send-reminders
-    runtime: python
-    rootDir: backend
-    buildCommand: pip install httpx
-    schedule: "0 9,13,22 * * *"
-    command: python -c "import httpx,os; base=os.environ.get('BACKEND_URL','https://lifeos-backend.onrender.com').rstrip('/'); r=httpx.post(f'{base}/cron/send-reminders',params={'reminder_type':'auto'},timeout=60); print(r.status_code)"
-    envVars:
-      - key: BACKEND_URL
-        sync: false
