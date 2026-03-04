@@ -7,13 +7,9 @@ services:
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     plan: free
-    disk:
-      name: lifeos-data
-      mountPath: /data
-      sizeGB: 1
     envVars:
       - key: DATABASE_URL
-        value: sqlite:////data/lifeos.db   # mounted disk → survives redeploys
+        value: sqlite:///./lifeos.db
       - key: OPENAI_API_KEY
         sync: false
       - key: TAVILY_API_KEY
@@ -35,8 +31,6 @@ services:
     plan: free
     envVars:
       - key: NEXT_PUBLIC_API_BASE
-        # After deploy, update this to your backend's https://lifeos-backend.onrender.com URL
         sync: false
       - key: NODE_VERSION
         value: "20"
-
