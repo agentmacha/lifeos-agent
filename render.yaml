@@ -1,0 +1,60 @@
+services:
+  # ── Backend Web Service ───────────────────────────────────────────────
+  - type: web
+    name: lifeos-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    plan: free
+    disk:
+      name: lifeos-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: DATABASE_URL
+        value: sqlite:////data/lifeos.db   # mounted disk → survives redeploys
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: REKA_API_KEY
+        sync: false
+      - key: REKA_API_URL
+        value: https://api.reka.ai/v1
+      - key: PYTHON_VERSION
+        value: "3.12.0"
+
+  # ── Frontend Web Service ──────────────────────────────────────────────
+  - type: web
+    name: lifeos-frontend
+    runtime: node
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    startCommand: node .next/standalone/server.js
+    plan: free
+    envVars:
+      - key: NEXT_PUBLIC_API_BASE
+        # After deploy, update this to your backend's https://lifeos-backend.onrender.com URL
+        sync: false
+      - key: NODE_VERSION
+        value: "20"
+
+  # ── Reminders cron: SMS/email at 9:00, 13:00, 22:00 UTC (morning, lunch, sleep)
+  - type: cron
+    name: lifeos-send-reminders
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install httpx
+    schedule: "0 9,13,22 * * *"
+    command: |
+      python -c "
+      import httpx, os
+      base = os.environ.get('BACKEND_URL', 'https://lifeos-backend.onrender.com').rstrip('/')
+      r = httpx.post(f'{base}/cron/send-reminders', params={'reminder_type': 'auto'}, timeout=60)
+      print(r.status_code, r.json() if r.status_code == 200 else r.text)
+      "
+    envVars:
+      - key: BACKEND_URL
+        sync: false
+        # Set to your backend URL, e.g. https://lifeos-backend.onrender.com
