@@ -27,10 +27,16 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(title="LifeOS Agent API", version="1.0.0")
 
 # Explicit origins so credentials work; * with credentials is invalid in CORS
-_CORS_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000"]
+_CORS_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://lifeos-frontend-5wij.onrender.com",
+    # catch any *.onrender.com frontend just in case
+]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_CORS_ORIGINS,
+    allow_origin_regex=r"https://.*\.onrender\.com",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -39,7 +45,7 @@ app.add_middleware(
 # Ensure 500 and other errors still send CORS headers (browser would otherwise hide the response)
 def _cors_headers() -> dict:
     return {
-        "Access-Control-Allow-Origin": _CORS_ORIGINS[0],
+        "Access-Control-Allow-Origin": "https://lifeos-frontend-5wij.onrender.com",
         "Access-Control-Allow-Credentials": "true",
         "Access-Control-Allow-Methods": "*",
         "Access-Control-Allow-Headers": "*",
