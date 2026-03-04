@@ -26,7 +26,7 @@ services:
     name: lifeos-frontend
     runtime: node
     rootDir: frontend
-    buildCommand: npm ci && npm run build
+    buildCommand: npm ci && npm run build && cp -r .next/static .next/standalone/.next/static && mkdir -p .next/standalone/public && cp -r public/. .next/standalone/public/ 2>/dev/null || true
     startCommand: node .next/standalone/server.js
     plan: free
     envVars:
