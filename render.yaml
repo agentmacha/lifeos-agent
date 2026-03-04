@@ -31,6 +31,10 @@ services:
     plan: free
     envVars:
       - key: NEXT_PUBLIC_API_BASE
-        sync: false
+        value: https://lifeos-backend-jus1.onrender.com
       - key: NODE_VERSION
         value: "20"
+      - key: PORT
+        value: "10000"
+      - key: HOSTNAME
+        value: "0.0.0.0"
