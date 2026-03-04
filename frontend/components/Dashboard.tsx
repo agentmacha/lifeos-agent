@@ -136,7 +136,7 @@ export default function Dashboard() {
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-slate-950">
       {/* ── Header ─────────────────────────────────────────────── */}
-      <header className="shrink-0 flex items-center gap-4 px-5 py-3 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border-b border-slate-800/60 shadow-xl">
+      <header className="shrink-0 flex items-center gap-3 px-4 py-2.5 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border-b border-slate-800/60 shadow-xl">
         {/* Logo */}
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 via-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/25">
@@ -195,7 +195,7 @@ export default function Dashboard() {
       </header>
 
       {/* ── Main 3-column grid ──────────────────────────────────── */}
-      <main className="flex-1 overflow-hidden grid grid-cols-1 lg:grid-cols-[280px_1fr_320px] gap-4 p-4">
+      <main className="flex-1 overflow-hidden grid grid-cols-1 lg:grid-cols-[240px_1fr_270px] gap-3 p-3">
         {/* Left — Stats */}
         <aside className="hidden lg:block overflow-hidden">
           <StatsPanel

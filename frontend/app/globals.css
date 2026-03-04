@@ -6,6 +6,14 @@
   color-scheme: dark;
 }
 
+/* Scale the entire UI to ~80% so the 3-column layout fits on any laptop screen
+   without the user having to manually zoom out in the browser.
+   Only applies to Chromium/Safari (zoom is ignored by Firefox, which handles
+   the layout fine via the narrower column widths below). */
+html {
+  zoom: 0.82;
+}
+
 body {
   @apply bg-slate-950 text-slate-100 antialiased;
 }
